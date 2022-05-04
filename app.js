@@ -23,24 +23,19 @@ app.get('/', (req, res) => {
 
 app.post('/send', (req, res) => {
   const output = `
-    <p>You have a new contact request</p>
-    <h3>Contact Details</h3>
-    <ul>  
-      <li>Name: ${req.body.name}</li>
-      <li>Email: ${req.body.email}</li>
-    </ul>
+    <p>You have a new Maily!</p>
     <h3>Message</h3>
     <p>${req.body.message}</p>
   `;
 
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // true for 465, false for other ports
+    host: "smtp.mailtrap.io",
+    port: 2525,
+    secure: false, // true for 465, false for other ports
     auth: {
-        user: 'YOUREMAIL', // generated ethereal user
-        pass: 'YOURPASSWORD'  // generated ethereal password
+      user: "3cc75df0456357",
+      pass: "64b874a66d0f3d"
     },
     tls:{
       rejectUnauthorized:false
@@ -48,10 +43,11 @@ app.post('/send', (req, res) => {
   });
 
   // setup email data with unicode symbols
+  // let userEmail = req.body.email
   let mailOptions = {
-      from: '"Nodemailer Contact" <your@email.com>', // sender address
-      to: 'RECEIVEREMAILS', // list of receivers
-      subject: 'Node Contact Request', // Subject line
+      from: '"Nodemailer" <your@email.com>', // sender address
+      to: "to-example@email.com", // list of receivers
+      subject: 'Maily', // Subject line
       text: 'Hello world?', // plain text body
       html: output // html body
   };
