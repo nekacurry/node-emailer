@@ -1,5 +1,5 @@
 const express = require('express');
-// const sendMail = require('./mail');
+const sendMail = require('./mail.js');
 const router = express.Router();
 const log = console.log;
 const app = express();
@@ -27,8 +27,14 @@ app.get('/', function (req, res) {
 app.listen(PORT, () => log('Server is starting on PORT,', 8080));
 
 app.post('/email', (req, res) => {
-  //Send an email here but currently dummy email
   const { subject, email, text } = req.body;
-  log('Data:', req.body);
-  res.json({message: 'Message received!'})
+  log('Data: ', req.body);
+
+  sendMail(email, subject, text, function(err, data) {
+      if (err) {
+          res.status(500).json({ message: 'Internal Error' });
+      } else {
+          res.status({ message: 'Email sent!!!' });
+      }
+  });
 });
