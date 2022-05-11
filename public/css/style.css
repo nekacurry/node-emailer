@@ -72,6 +72,7 @@ ul{
   background:#ffc9d1;
   border:0;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .contact form button:hover,.contact form button:focus{

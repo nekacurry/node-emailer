@@ -27,14 +27,17 @@ app.get('/', function (req, res) {
 app.listen(PORT, () => log('Server is starting on PORT,', 8080));
 
 app.post('/email', (req, res) => {
+  const DELAY = 300000
   const { subject, email, text } = req.body;
   log('Data: ', req.body);
 
-  sendMail(email, subject, text, function(err, data) {
+  setTimeout(function(){
+    sendMail(email, subject, text, function(err, data) {
       if (err) {
           res.status(500).json({ message: 'Internal Error' });
       } else {
           res.status({ message: 'Email sent!!!' });
       }
-  });
+    })
+  }, DELAY)
 });
