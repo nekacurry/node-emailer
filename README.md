@@ -7,5 +7,5 @@ npm install
 ## Run
 
 ```bash
-node app
+nodemon server.js
 ```
