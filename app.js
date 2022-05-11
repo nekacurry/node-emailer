@@ -1,67 +1,34 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const exphbs = require('express-handlebars');
-const path = require('path');
-const nodemailer = require('nodemailer');
-
+// const sendMail = require('./mail');
+const router = express.Router();
+const log = console.log;
 const app = express();
+const path = require('path');
+const PORT = 8080;
+const bodyParser = require('body-parser');
 
-// View engine setup
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+app.engine('html', require('ejs').renderFile);
 
 // Static folder
 app.use('/public', express.static(path.join(__dirname, 'public')));
+router.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  //__dirname : It will resolve to your project folder.
+});
 
-// Body Parser Middleware
+// Body Parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.render('contact', {layout: false});
+app.get('/', function (req, res) {
+  res.render("index.html")
 });
 
-app.post('/send', (req, res) => {
-  const output = `
-    <p>You have a new Maily!</p>
-    <h3>Message</h3>
-    <p>${req.body.message}</p>
-  `;
+app.listen(PORT, () => log('Server is starting on PORT,', 8080));
 
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "3cc75df0456357",
-      pass: "64b874a66d0f3d"
-    },
-    tls:{
-      rejectUnauthorized:false
-    }
-  });
-
-  // setup email data with unicode symbols
-  // let userEmail = req.body.email
-  let mailOptions = {
-      from: '"Nodemailer" <your@email.com>', // sender address
-      to: "to-example@email.com", // list of receivers
-      subject: 'Maily', // Subject line
-      text: 'Hello world?', // plain text body
-      html: output // html body
-  };
-
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-          return console.log(error);
-      }
-      console.log('Message sent: %s', info.messageId);   
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
-      res.render('contact', {msg:'Email has been sent'}, {layout: false});
-  });
-  });
-
-app.listen(3000, () => console.log('Server started...'));
+app.post('/email', (req, res) => {
+  //Send an email here but currently dummy email
+  const { subject, email, text } = req.body;
+  log('Data:', req.body);
+  res.json({message: 'Message received!'})
+});
